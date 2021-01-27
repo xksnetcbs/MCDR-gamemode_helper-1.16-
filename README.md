@@ -1,8 +1,14 @@
 # MCDR-gamemode_helper-1.16-
 终于肝完了，这个是给DT服务器使用的插件，类似于tweakeroo(可以理解成是高级的tweakeroo)
-食用方法：
+食用方法Server：
 1.在plugins文件夹中新建gm文件夹
 2.将两个文件全都放进plugins文件夹中
+
+食用方法Client：
+1.输入！c切换旁观
+2.输入!s切换生存，回到原来的切旁观的地方
+
+
 
 当前版本  v1.3.3
 
