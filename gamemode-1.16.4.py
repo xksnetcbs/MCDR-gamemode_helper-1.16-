@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import json
+
+from mcdreforged.api.all import *
 import re
 global x
 global y
 global z
 PLUGIN_METADATA = {
 	'id': 'gmode',
-	'version': '1.3.2',
+	'version': '1.3.4',
 	'name': 'Change Your Gamemode Like Tweakeroo!',
 	'author': [
 		'DC_Provide'
@@ -22,26 +24,35 @@ playerX = 0
 playerY = 0
 playerZ = 0
 here_user = 0
+@new_thread(PLUGIN_METADATA['name'])
+def show_me(source: CommandSource):
+        if isinstance(source, PlayerCommandSource):
+                api = source.get_server().get_plugin_instance('minecraft_data_api')
+                coord = api.get_player_coordinate(source.player)
+                dim = api.get_player_dimension(source.player)
+                dim_text = api.get_dimension_translation_text(dim)
+                f = open("./plugins/gm/" + source.player, 'w')
+                f.write(str(coord.x) + ' ' + str(coord.y) + ' ' + str(coord.z))
+                f.close()
+                f = open("./plugins/gm/" + source.player + '.dat', 'w')
+                if dim == 0:
+                        f.write("minecraft:overworld")
+                elif dim == 1:
+                        f.write("minecraft:the_end")
+                else:
+                        f.write("minecraft:the_nether")
+                f.close()
+
+def on_load(server: ServerInterface, prev):
+        #server.register_help_message('!!s-here', '广播坐标并高亮玩家')
+        server.register_command(Literal('!c').runs(show_me))
 def on_info(server, info):
         global position, demen
         global playerX, playerY, playerZ
-        PlayerInfoAPI = server.get_plugin_instance('PlayerInfoAPI')
+        #PlayerInfoAPI = server.get_plugin_instance('PlayerInfoAPI')
         i = 0
         if info.content == '!c':
-                position = PlayerInfoAPI.getPlayerInfo(server, info.player, path='Pos')
                 server.execute("gamemode spectator " + info.player)
-                playerX, playerY, playerZ = position
-                f = open("./plugins/gm/" + info.player,'r')
-                if f.read() != '':
-                        server.say("装你妈的B！")
-                        return 0
-                f.close()
-                f = open("./plugins/gm/" + info.player,'w')
-                f.write(str(playerX) + ' ' + str(playerY) + ' ' + str(playerZ))
-                f.close()
-                f = open("./plugins/gm/" + info.player + ".dat", 'w')
-                f.write(str(PlayerInfoAPI.getPlayerInfo(server, info.player, path='Dimension')))
-                f.close()
         if info.content == '!s':
                 f = open("./plugins/gm/" + info.player, 'r')
                 pos = f.read()
