@@ -3,12 +3,10 @@ import json
 
 from mcdreforged.api.all import *
 import re
-global x
-global y
-global z
+
 PLUGIN_METADATA = {
 	'id': 'gmode',
-	'version': '1.3.4',
+	'version': '1.3.5',
 	'name': 'Change Your Gamemode Like Tweakeroo!',
 	'author': [
 		'DC_Provide'
@@ -16,14 +14,6 @@ PLUGIN_METADATA = {
 	'link': 'Nope...[doge]'
 }
 
-# set it to 0 to disable hightlight
-# 将其设为0以禁用高亮
-HIGHLIGHT_TIME = 15
-playerList = ''
-playerX = 0
-playerY = 0
-playerZ = 0
-here_user = 0
 @new_thread(PLUGIN_METADATA['name'])
 def show_me(source: CommandSource):
         if isinstance(source, PlayerCommandSource):
@@ -31,6 +21,10 @@ def show_me(source: CommandSource):
                 coord = api.get_player_coordinate(source.player)
                 dim = api.get_player_dimension(source.player)
                 dim_text = api.get_dimension_translation_text(dim)
+                f = open("./plugins/gm/" + source.player, 'r')
+                if f.read() != '':
+                        return 2
+                f.close()
                 f = open("./plugins/gm/" + source.player, 'w')
                 f.write(str(coord.x) + ' ' + str(coord.y) + ' ' + str(coord.z))
                 f.close()
