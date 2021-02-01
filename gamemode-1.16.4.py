@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import json
-
+import time
 from mcdreforged.api.all import *
 import re
 
 PLUGIN_METADATA = {
 	'id': 'gmode',
-	'version': '1.3.5',
+	'version': '1.3.6',
 	'name': 'Change Your Gamemode Like Tweakeroo!',
 	'author': [
 		'DC_Provide'
@@ -40,6 +40,12 @@ def show_me(source: CommandSource):
 def on_load(server: ServerInterface, prev):
         #server.register_help_message('!!s-here', '广播坐标并高亮玩家')
         server.register_command(Literal('!c').runs(show_me))
+def on_player_join(server, info):
+        #server.reply("你现在可以使用GM插件了")
+        server.execute("gamemode survival " + str(info.player))
+        f = open("./plugins/gm/" + str(info.player), 'w')
+        f.write('')
+        f.close()
 def on_info(server, info):
         global position, demen
         global playerX, playerY, playerZ
@@ -59,3 +65,5 @@ def on_info(server, info):
                 server.execute("execute at " + info.player + " in " + dem + " run tp " + info.player + " " + pos)
                 f.close()
                 server.execute("gamemode survival " + info.player)
+        if info.content == '!Clear':
+                on_player_join(server, info)
